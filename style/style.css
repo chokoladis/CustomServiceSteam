@@ -1,0 +1,45 @@
+:root{
+    --clr-main: rgb(21, 189, 231);
+    --clr-card-bg: rgb(223, 223, 223);
+}
+
+*{
+    margin: 0;
+    padding: 0;   
+}
+*, *:hover{
+    transition: .3s;
+}
+
+ul,li,p,
+h1,h2,h3,h4,h5,h6{
+    margin: 0;
+    padding: 0;
+}
+
+
+header .container nav{
+    background: var(--clr-main);
+    color: white;
+    padding: 20px ;
+}
+
+section{
+    margin: 60px 0;
+}
+
+section .card-list{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+section .card-list .card-game{
+    width: 30%;
+    margin-right: 2%;
+    margin-bottom: 15px;
+    padding: 10px;
+    background: var(--clr-card-bg);
+}
+section .card-list .card-game .title{
+    display: flex;
+}

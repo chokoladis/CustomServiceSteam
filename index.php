@@ -2,19 +2,14 @@
 require_once('header.php');
 ?>
 
-<header>
-    <div class="container">
-        header content
-    </div>
-</header>
-
 <section class="content" id="content">
     <div class="container">
-        <?=$ListGame?>
+        <?=$content?>
+        <?php
+            echo ($nav_pages != '') ? $nav_pages : '';
+        ?>
     </div>
 </section>
-
-
 
 <?
 require_once('footer.php');
