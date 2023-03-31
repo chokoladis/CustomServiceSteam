@@ -78,6 +78,9 @@ class steam{
 
         $html["ELEMENTS"] .= '</div>';
 
+        $limit = ($limit == 0) ? count($apps) : $limit;
+
+
         $pages_count = ceil($limit/self::$ELEMENTS_ON_PAGE);
 
         $j = 0;
@@ -85,6 +88,7 @@ class steam{
 
         $query = $this->$QUERY;
         $queryStr = '';
+        $pageCurr = 1;
 
         foreach($query as $param => $val){
             
@@ -103,13 +107,56 @@ class steam{
         $i = 1;
 
         while($pages_count >= $i){
+
+            $class = '';
+
+            if ($i == $pageCurr){
+                $class .= ' active';
+            }
+
+
+            if ($i > 6 && $i < ($pages_count - 1)){
+
+                $i = $pages_count - 1;
+
+                $li .= '<li class="page-item '.$class.'">
+                    <a class="page-link" href="'.$queryStr.'&page='.$i.'">...</a>
+                </li>';
+            } else {
+                $li .= '<li class="page-item '.$class.'">
+                    <a class="page-link" href="'.$queryStr.'&page='.$i.'">'.$i.'</a>
+                </li>';
+            }
             
-            $li .= '<li><a href="'.$queryStr.'&page='.$i.'">page '.$i.'</a></li>';
+          
             $i++;
         }
 
-        $html["NAV_PAGES"] = '<nav class="pages">
-                <ul>'.$li.'
+        $prev_page = $pageCurr - 1;
+        $next_page = $pageCurr + 1;
+
+        if ($prev_page < 1){
+            $prev_page = 1;
+            $prev_page_class = 'disabled';
+        }
+        if ($next_page > $pages_count){
+            $next_page = $pages_count;
+            $next_page_class = 'disabled';
+        }
+
+        $html["NAV_PAGES"] = '<nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li class="page-item '.$prev_page_class.'">
+                        <a class="page-link" href="'.$queryStr.'&page='.$prev_page.'" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    '.$li.'
+                    <li class="page-item '.$next_page_class.'">
+                        <a class="page-link" href="'.$queryStr.'&page='.$next_page.'" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
                 </ul>
             </nav>';
 
@@ -126,13 +173,19 @@ class steam{
         return file_get_contents($url);
     }
 
+    public function homePage(){
+        return '<div class="homePage d-flex flex-column">
+                    <h1>Главная страница</h1>   
+                </div>';
+        
+    }
+
     public function page404(){
         return '<div class="page404 d-flex flex-column">
                     <img src="" alt="">
                     <h3>Ты ошибся адресом, тебе не сюда</h3>
                     <span>Твой запрос - '.$_SERVER['REQUEST_URI'].'</span>
                 </div>';
-        
     }
 
     public function handlerParamsGet(){
@@ -141,7 +194,8 @@ class steam{
         $query = $this->$QUERY;
 
         if ($query == '' || empty($query)) {
-            return $this->page404();
+            return $this->homePage();
+            // return $this->page404();
         }
 
         foreach($query as $param => $value){
@@ -158,6 +212,8 @@ class steam{
         
         if ($method == 'getAppList'){
             return $this->appListHtml($limit, $page);
+        } else {
+            // return pageError(403)
         }
     }
    
